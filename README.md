@@ -7,7 +7,7 @@ for an upcoming blog post at http://exegetotrope.blogspot.com.  It's also an
 example of my use of Java:  I use Java quite a bit on the job but (until now)
 didn't have any examples of that on Github.
 
-# Usage:
+# Usage
 * make all
 * make tests
 * java org/johnkerl/unorunner/UnoGameRunner 4
@@ -26,9 +26,9 @@ didn't have any examples of that on Github.
 
 # Data being printed
 
-Game-details mode:
+Game-details mode (c2h and other CSV tools are at https://github.com/johnkerl/scripts/tree/master/ntbl):
 ```
-$  java org/johnkerl/unorunner/UnoGameRunner 4
+$  java org/johnkerl/unorunner/UnoGameRunner 4 | c2h
 nturn nshuf c0 c1 c2 c3 ndraw ndeck ndis card          
 ----- ----- -- -- -- -- ----- ----- ---- --------------
 0     1     7  7  7  7  0     79    1    _             
@@ -62,7 +62,7 @@ nturn nshuf c0 c1 c2 c3 ndraw ndeck ndis card
 
 Game-summary mode:
 ```
-$ java org/johnkerl/unorunner/UnoGameRunner 4 10
+$ java org/johnkerl/unorunner/UnoGameRunner 4 10 | c2h
 nturn nshuf
 ----- -----
 29    1    
