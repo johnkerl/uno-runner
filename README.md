@@ -26,7 +26,7 @@ didn't have any examples of that on Github.
 
 # Data being printed
 
-Game-details mode (c2h and other CSV tools are at https://github.com/johnkerl/scripts/tree/master/ntbl):
+Game-details mode ( c2h and other CSV tools are at https://github.com/johnkerl/scripts/tree/master/ntbl ):
 ```
 $  java org/johnkerl/unorunner/UnoGameRunner 4 | c2h
 nturn nshuf c0 c1 c2 c3 ndraw ndeck ndis card          
