@@ -10,5 +10,6 @@ didn't have any examples of that on Github.
 Usage:
 * make all
 * make tests
-* java org/johnkerl/unorunner/UnoGameRunner
+* java org/johnkerl/unorunner/UnoGameRunner 4
+* java org/johnkerl/unorunner/UnoGameRunner 4 100
 * make clean
