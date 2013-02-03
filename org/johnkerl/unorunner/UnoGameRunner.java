@@ -3,7 +3,8 @@ package org.johnkerl.unorunner;
 // Main entry point.  Runs a game with CSV-printing visitor.
 public class UnoGameRunner
 {
-	private static class UnoGameVisitorImpl
+	// ----------------------------------------------------------------
+	private static class UnoGameTurnVisitorImpl
 		implements UnoGameVisitor
 	{
 		public void doStartOfGame(UnoGame game) {
@@ -35,10 +36,6 @@ public class UnoGameRunner
 		}
 		public void doStartOfTurn(UnoGame game) {
 		}
-		public void doDraw(UnoGame game) {
-		}
-		public void doCardPlayed(UnoGame game, UnoCard c) {
-		}
 
 		public void doEndOfTurn(UnoGame game) {
 			StringBuilder sb = new StringBuilder();
@@ -65,12 +62,55 @@ public class UnoGameRunner
 	}
 
 	// ----------------------------------------------------------------
+	private static class UnoGameSummaryVisitorImpl
+		implements UnoGameVisitor
+	{
+		public void printHeader() {
+			StringBuilder sb = new StringBuilder();
+			sb.append("nturn,");
+			sb.append("nshuf");
+			System.out.println(sb.toString());
+		}
+		public void doStartOfGame(UnoGame game) {
+		}
+		public void doStartOfTurn(UnoGame game) {
+		}
+
+		public void doEndOfTurn(UnoGame game) {
+		}
+
+		public void doEndOfGame(UnoGame game) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(game.getNumTurns()).append(",");
+			sb.append(game.getNumShuffles());
+			System.out.println(sb.toString());
+		}
+	}
+
+	// ----------------------------------------------------------------
 	public static void main(String[] args) {
 		int numHands = 4;
-		if (args.length == 1)
+		int numGames = 1;
+		if (args.length == 1) {
 			numHands = Integer.parseInt(args[0]);
-		UnoGame game = new UnoGame(numHands, new SimpleUnoStrategy(),
-			new UnoGameVisitorImpl());
-		game.play();
+			UnoGame game = new UnoGame(numHands, new SimpleUnoStrategy(),
+				new UnoGameTurnVisitorImpl());
+			game.play();
+		}
+		else if (args.length == 2) {
+			numHands = Integer.parseInt(args[0]);
+			numGames = Integer.parseInt(args[1]);
+			UnoGameSummaryVisitorImpl visitor = new UnoGameSummaryVisitorImpl();
+			visitor.printHeader();
+			for (int i = 0; i < numGames; i++) {
+				UnoGame game = new UnoGame(numHands, new SimpleUnoStrategy(),
+					visitor);
+				game.play();
+			}
+		}
+		else {
+			System.err.println("Usage: UnoGameRunner {numHands} [numGames]");
+			System.exit(1);
+		}
 	}
 }

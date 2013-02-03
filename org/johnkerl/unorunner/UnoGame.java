@@ -109,7 +109,6 @@ public class UnoGame
 			while (_numDrawsPending-- > 0) {
 				currentHand.push(draw());
 				_lastNumDraws++;
-				_visitor.doDraw(this);
 			}
 		}
 		else {
@@ -127,8 +126,6 @@ public class UnoGame
 				_wildSuit = _strategy.chooseSuitForWild(currentHand);
 			else
 				_wildSuit = cardPlayed.getSuit();
-
-			_visitor.doCardPlayed(this, cardPlayed);
 
 			_discards.push(cardPlayed);
 
