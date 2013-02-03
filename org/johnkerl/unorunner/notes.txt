@@ -1,0 +1,20 @@
+UT:
+
+UnoCard:
+k playableTo
+
+SimpleUnoStrategy:
+k ValueComparator
+* playTo
+* chooseSuitForWild
+
+UnoDeck:
+* assert deck size == 108
+
+(UnoGame:)
+(* turn() is big ...)
+
+UnoHands:
+* advance & reverse
+
+UnoHand:
