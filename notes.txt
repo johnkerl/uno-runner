@@ -1,0 +1,9 @@
+To examine:
+* Expected next-turn hand size conditioned on current hand size.  Try to
+  explain long-term game-length variability in terms of short-term hand-size
+  pressures.
+* Distribution of hand sizes overall; then, conditioned on game length (or,
+  more coarsely, number of reshuffles).
+* Distribution of game lengths (in number of turns, and/or number of
+  reshuffles).
+* Distribution of draw sizes.
