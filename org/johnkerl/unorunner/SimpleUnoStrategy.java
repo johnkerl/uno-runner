@@ -33,7 +33,7 @@ public class SimpleUnoStrategy
 		_playableQueue.clear();
 		for (UnoCard card : cards) {
 			if (card == null)
-				throw new IllegalStateException("WTFC!");
+				throw new IllegalStateException("Asked to play an empty hand -- game should be over!");
 			if (card.playableOn(topDiscard, wildSuit)) {
 				_playableQueue.add(card);
 			}
