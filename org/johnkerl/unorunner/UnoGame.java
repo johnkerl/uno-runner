@@ -1,16 +1,23 @@
 package org.johnkerl.unorunner;
+// last/next player: _hands.getCurrentIndex()
+// shufflecount
+// drawcount
 
 public class UnoGame
 {
 	private static final int NUM_CARDS_PER_HAND = 7;
-	private UnoDeck      _deck;
-	private UnoHands     _hands;
-	private UnoDiscards  _discards;
-	private UnoStrategy  _strategy;
-	private UnoCard.Suit _wildSuit = null;
-	private int          _numDrawsPending;
-	private boolean      _done;
-	private int          _numTurns;
+	private UnoDeck        _deck;
+	private UnoHands       _hands;
+	private UnoDiscards    _discards;
+	private UnoStrategy    _strategy;
+	private UnoCard.Suit   _wildSuit = null;
+	private int            _numDrawsPending;
+	private int            _numTurns;
+	private int            _numShuffles;
+	private int            _lastPlayerIndex;
+	private UnoCard        _lastCardPlayed;
+	private int            _lastNumDraws;
+	private boolean        _done;
 	private UnoGameVisitor _visitor;
 
 	// As presently coded, this uses the same strategy for each player.
@@ -38,6 +45,12 @@ public class UnoGame
 		_numDrawsPending = 0;
 		_done = false;
 		_numTurns = 0;
+		_numShuffles = 1;
+		_lastPlayerIndex = _hands.getCurrentIndex();
+		_lastCardPlayed = null;
+		// xxx to do: distinguish between draws due to draw-2/draw-4 cards,
+		// and draws due to unplayable hand?
+		_lastNumDraws = 0;
 
 		_visitor = visitor;
 	}
@@ -54,6 +67,9 @@ public class UnoGame
 	public int getNumTurns() {
 		return _numTurns;
 	}
+	public int getNumShuffles() {
+		return _numShuffles;
+	}
 	public int getDeckSize() {
 		return _deck.size();
 	}
@@ -67,6 +83,15 @@ public class UnoGame
 		// xxx to do: clarify what happens on out-of-bounds exception.
 		return _hands.getHandSize(whichHand);
 	}
+	public int getLastPlayerIndex() {
+		return _lastPlayerIndex;
+	}
+	public UnoCard getLastCardPlayed() {
+		return _lastCardPlayed;
+	}
+	public int getLastNumDraws() {
+		return _lastNumDraws;
+	}
 
 	// ----------------------------------------------------------------
 	private void turn() {
@@ -74,11 +99,16 @@ public class UnoGame
 		UnoCard topDiscard = _discards.peek();
 		UnoCard.Rank discardRank = topDiscard.getRank();
 
+		_lastPlayerIndex = _hands.getCurrentIndex();
+
 		_visitor.doStartOfTurn(this);
 
+		_lastNumDraws = 0;
 		if (_numDrawsPending > 0) {
+			_lastCardPlayed = null;
 			while (_numDrawsPending-- > 0) {
 				currentHand.push(draw());
+				_lastNumDraws++;
 				_visitor.doDraw(this);
 			}
 		}
@@ -87,9 +117,11 @@ public class UnoGame
 				topDiscard, _wildSuit);
 			while (cardPlayed == null) {
 				currentHand.push(draw());
+				_lastNumDraws++;
 				cardPlayed = _strategy.playTo(currentHand,
 					topDiscard, _wildSuit);
 			}
+			_lastCardPlayed = cardPlayed;
 
 			if (cardPlayed.getSuit() == UnoCard.Suit.WILD)
 				_wildSuit = _strategy.chooseSuitForWild(currentHand);
@@ -114,9 +146,8 @@ public class UnoGame
 			else if (cardPlayedRank == UnoCard.Rank.DRAW_FOUR)
 				_numDrawsPending = 4;
 		}
-		_visitor.doEndOfTurn(this);
-
 		_numTurns++;
+		_visitor.doEndOfTurn(this);
 	}
 
 	private UnoCard draw() {
@@ -124,6 +155,7 @@ public class UnoGame
 			while (_discards.size() > 1)
 				_deck.push(_discards.undiscard());
 			_deck.shuffle();
+			_numShuffles++;
 		}
 		return _deck.pop();
 	}
